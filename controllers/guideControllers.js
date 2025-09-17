@@ -62,17 +62,60 @@ export const createGuide = async (req, res, next) => {
 };
 
 export const getGuides = async (req, res, next) => {
-  try {
-    const guides = await Guide.find();
+  const { search } = req.query;
 
-    const formatted = guides.map((guide) => {
-      const obj = guide.toObject();
-      obj.id = obj._id.toString();
-      return obj;
+  const query = search
+    ? {
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { author: { $regex: search, $options: "i" } },
+          { model: { $regex: search, $options: "i" } },
+          { tools: { $regex: search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  try {
+    const guides = await Guide.find(query).sort({ createdAt: -1 });
+    res.json(guides);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching guides" });
+  }
+};
+
+export const deleteGuide = async (req, res, next) => {
+  const guideId = req.params.id;
+
+  try {
+    const guide = await Guide.findById(guideId);
+
+    if (!guide) {
+      return res.status(404).json({ message: "Could not find guide" });
+    }
+
+    await Guide.deleteOne({ _id: guideId });
+
+    return res.status(200).json({ message: "Guide deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "Something went wrong, could not delete guide" });
+  }
+};
+
+export const updateGuide = async (req, res, next) => {
+  try {
+    const guideId = req.params.id;
+    const updatedGuide = await Guide.findByIdAndUpdate(guideId, req.body, {
+      new: true,
     });
 
-    res.status(200).json({ guides: formatted });
-  } catch (err) {
-    res.status(500).json({ message: "Fetching guides failed." });
+    if (!updatedGuide)
+      return res.status(404).json({ message: "Guide not found" });
+
+    res.status(200).json(updatedGuide);
+  } catch (error) {
+    next(error);
   }
 };
