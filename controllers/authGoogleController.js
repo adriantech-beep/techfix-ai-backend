@@ -1,4 +1,3 @@
-// routes / authGoogle.ts;
 import express from "express";
 import { OAuth2Client } from "google-auth-library";
 
@@ -6,7 +5,6 @@ import User from "../schemas/User.js";
 import { generateToken } from "../utils/jwt.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const router = express.Router();
 
 export const authGoogle = async (req, res) => {
   const { token } = req.body;
@@ -64,5 +62,3 @@ export const authGoogle = async (req, res) => {
     return res.status(401).json({ message: "Invalid Google token" });
   }
 };
-
-export default router;
