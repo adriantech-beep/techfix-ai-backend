@@ -10,6 +10,7 @@ import guideRoutes from "./routes/guideRoutes.js";
 import mongoose from "mongoose";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import authGoogleRoutes from "./routes/authGoogleRoutes.js";
+import authUserRoutes from "./routes/authUserRoutes.js";
 
 const app = express();
 app.use(
@@ -46,6 +47,8 @@ app.use("/api/chat", aiRoutes);
 app.use("/api/upload", uploadRoutes);
 
 app.use("/api/auth", authGoogleRoutes);
+
+app.use("/api/auth", authUserRoutes);
 
 app.listen(process.env.PORT, () =>
   console.log(`Server running on port ${process.env.PORT}`)
