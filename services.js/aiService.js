@@ -4,19 +4,49 @@ import { askGemini } from "./askGemini.js";
 import { SYSTEM_PROMPT } from "../config/geminiClient.js";
 import { formatGuideResponse } from "./formatGuideResponse.js";
 
-function isGuideQuery(message) {
-  const keywords = ["repair", "replacement", "disassembly", "fix"];
-  return keywords.some((word) => message.toLowerCase().includes(word));
+// function isGuideQuery(message) {
+//   const keywords = [
+//     "repair",
+//     "replace",
+//     "replacement",
+//     "disassembly",
+//     "disassemble",
+//     "fix",
+//   ];
+//   return keywords.some((word) => message.toLowerCase().includes(word));
+// }
+
+function detectQueryIntent(message) {
+  const lower = message.toLowerCase();
+
+  if (
+    /(disassembly|disassemble|teardown|open|step by step|guide|manual)/.test(
+      lower
+    )
+  ) {
+    return "disassembly";
+  }
+
+  if (
+    /(repair|replace|replacement|fix|issue|problem|root cause|why|cause)/.test(
+      lower
+    )
+  ) {
+    return "repair";
+  }
+
+  return "general";
 }
 
 export const aiService = {
   async sendMessage(conversationId, message) {
     const history = conversationRepository.getHistory(conversationId) || [];
 
+    const intent = detectQueryIntent(message);
     let reply;
 
-    if (isGuideQuery(message)) {
-      const guide = await searchDbGuide(message);
+    if (intent !== "general") {
+      const guide = await searchDbGuide(message, intent);
       if (guide) {
         reply = formatGuideResponse(guide);
       }
