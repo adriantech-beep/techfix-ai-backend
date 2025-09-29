@@ -1,6 +1,6 @@
 import Guide from "../model/Guide.js";
 
-export const searchDbGuide = async (query) => {
+export const searchDbGuide = async (query, intent) => {
   if (!query || !query.trim()) return null;
 
   const cleaned = query.replace(/[^\w\s]/g, " ").trim();
@@ -10,6 +10,14 @@ export const searchDbGuide = async (query) => {
       $search: {
         index: "guides_search",
         compound: {
+          must: [
+            {
+              text: {
+                query: intent,
+                path: "category",
+              },
+            },
+          ],
           should: [
             {
               text: {
@@ -42,6 +50,7 @@ export const searchDbGuide = async (query) => {
         summary: 1,
         steps: 1,
         bodyMarkdown: 1,
+        category: 1,
         score: { $meta: "searchScore" },
       },
     },

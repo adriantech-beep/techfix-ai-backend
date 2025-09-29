@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import authGoogleRoutes from "./routes/authGoogleRoutes.js";
 import authUserRoutes from "./routes/authUserRoutes.js";
+import activeUserRoutes from "./routes/activeUserRoutes.js";
 
 const app = express();
 app.use(
@@ -50,6 +51,7 @@ app.use("/api/auth", authGoogleRoutes);
 
 app.use("/api/auth", authUserRoutes);
 
+app.use("/api/user", activeUserRoutes);
 app.listen(process.env.PORT, () =>
   console.log(`Server running on port ${process.env.PORT}`)
 );
