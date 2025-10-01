@@ -1,4 +1,3 @@
-// controllers/upload.js
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 import { Readable } from "stream";
@@ -22,8 +21,8 @@ export const uploadToCloudinary = (fileBuffer, _filename, folder) =>
       {
         folder,
         resource_type: "image",
-        use_filename: true, // use original filename (without path)
-        unique_filename: true, // add a unique suffix (prevents collisions)
+        use_filename: true,
+        unique_filename: true,
         overwrite: false,
       },
       (error, result) => (error ? reject(error) : resolve(result))

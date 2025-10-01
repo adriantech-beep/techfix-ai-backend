@@ -4,18 +4,6 @@ import { askGemini } from "./askGemini.js";
 import { SYSTEM_PROMPT } from "../config/geminiClient.js";
 import { formatGuideResponse } from "./formatGuideResponse.js";
 
-// function isGuideQuery(message) {
-//   const keywords = [
-//     "repair",
-//     "replace",
-//     "replacement",
-//     "disassembly",
-//     "disassemble",
-//     "fix",
-//   ];
-//   return keywords.some((word) => message.toLowerCase().includes(word));
-// }
-
 function detectQueryIntent(message) {
   const lower = message.toLowerCase();
 

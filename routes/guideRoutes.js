@@ -1,15 +1,11 @@
 import express from "express";
-import {
-  createGuide,
-  deleteGuide,
-  getGuides,
-  updateGuide,
-} from "../controllers/guideControllers.js";
+import { GuideController } from "../controllers/guideControllers.js";
 
 const router = express.Router();
+const controller = new GuideController();
 
-router.post("/", createGuide);
-router.get("/get-guides", getGuides);
-router.delete("/:id", deleteGuide);
-router.put("/:id", updateGuide);
+router.post("/", (req, res, next) => controller.create(req, res, next));
+router.get("/get-guides", (req, res, next) => controller.fetch(req, res, next));
+router.delete("/:id", (req, res, next) => controller.delete(req, res, next));
+router.put("/:id", (req, res, next) => controller.update(req, res, next));
 export default router;
