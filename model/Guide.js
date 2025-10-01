@@ -12,6 +12,10 @@ const GuideSchema = new mongoose.Schema({
     enum: ["Easy", "Medium", "Hard"],
     default: "Easy",
   },
+  symptom: {
+    description: String,
+    images: [{ url: String, caption: String, alt: String }],
+  },
   estimatedTimeMinutes: Number,
   tools: [String],
   parts: [{ name: String, partNumber: String, qty: Number, link: String }],
